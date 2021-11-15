@@ -24,6 +24,7 @@
 
 # include "stdio.h"
 # include "stdbool.h"
+# include "string.h"
 
 // Enums to help with code readability
 enum week{
@@ -66,47 +67,59 @@ bool checkIfLeap(int year){
 /************************************************************************
  * Determines how many days are in any given month
 ************************************************************************/
-int getDaysInMonth(int month, int year){
+int getDaysInMonth(int month, int year, char* monthstr){
     int daysInMonth = 0;
     //int isLeap = false;
 
     switch (month)
     {
     case JANUARY:
+        strncpy(monthstr, "JANUARY", 20);
         daysInMonth = 31;
         break;
     case FEBURARY:
-        if(checkIfLeap == true) daysInMonth = 29;
+        strncpy(monthstr, "FEBURARY", 20);
+        if(checkIfLeap(year) == true) daysInMonth = 29;
             else daysInMonth = 28;
         break;
     case MARCH:
+        strncpy(monthstr, "MARCH", 20);
         daysInMonth = 31;
         break;
     case APRIL:
+        strncpy(monthstr, "APRIL", 20);
         daysInMonth = 30;
         break;
     case MAY:
+        strncpy(monthstr, "MAY", 20);
         daysInMonth = 31;
         break;
     case JUNE:
+        strncpy(monthstr, "JUNE", 20);
         daysInMonth = 30;
         break;
     case JULY:
+        strncpy(monthstr, "JULY", 20);
         daysInMonth = 31;
         break;
     case AUGUST:
+        strncpy(monthstr, "AUGUST", 20);
         daysInMonth = 31;
         break;
     case SEPTEMBER:
+        strncpy(monthstr, "SEPTEMBER", 20);
         daysInMonth = 30;
         break;
     case OCTOBER:
+        strncpy(monthstr, "OCTOBER", 20);
         daysInMonth = 31;
         break;
     case NOVEMBER:
+        strncpy(monthstr, "NOVEMBER", 20) ; 
         daysInMonth = 30;
         break;
     case DECEMBER:
+        strncpy(monthstr, "DECEMBER", 20);
         daysInMonth = 31;
         break;
         
@@ -120,9 +133,35 @@ int getDaysInMonth(int month, int year){
 /************************************************************************
  * Prints the calendar
 ************************************************************************/
-void printCalendar(int month, int year){
-    int days = getDaysInMonth(month, year);
-    printf("days:\t\t%d\n", days);
+void printCalendar(int firstDayOfTheMonth, int month, int year){
+    char monthstr[20];
+    int days = getDaysInMonth(month, year, monthstr);         // Stores the number of days in the target month
+    int daycounter = 1;
+    
+    //printf("days:\t\t%d\n", days);
+    
+    //Printing the header
+    printf("\n\n\t\t%s\n", monthstr);
+    printf("sun\tmon\ttue\twed\tthu\tfri\tsat\n");
+
+    //Print the first week
+    for (int firstEmpty = 0; firstEmpty < firstDayOfTheMonth; firstEmpty++){
+        printf("\t");
+    }
+    for (int firstEmpty = 0; firstEmpty < 7 -firstDayOfTheMonth; firstEmpty++){
+        printf("%d\t", daycounter);
+        daycounter++;
+        days--;
+    }
+
+    // Printing the rest of the weeks;
+    for(){
+        for (int weekCounter = 7; weekCounter > 0; weekCounter--)
+            printf("%d\t", daycounter);
+            daycounter++;
+            days--;
+    }
+
 }
 
 
@@ -145,27 +184,61 @@ int calculate(int month, int year){
 
 
 /************************************************************************
+ * Sketchy user input
+ *      returns true if user input was successful
+ *      returns fals if user input failed
+************************************************************************/
+bool getUserInput(int* monthInput, int* yearInput){
+
+    printf("Please enter the Desired year:\t\t");
+    scanf("%d", yearInput);
+    if (*yearInput < 0){
+        printf("\nNot a valid year, try again\n\n");
+        return false;
+    }
+
+    printf("Please enter the desired month:\t\t");
+    scanf("%d", monthInput);
+    if(*monthInput < 1 || *monthInput > 12){
+        printf("\nNot a valid year, ie January = 1, Feburary = 2 ... December = 12\n");
+        printf("Please try again\n\n");
+        return false;
+    }
+
+    // Returns true if all user input was done correctly
+    return true;
+}
+
+
+/************************************************************************
  * Main Function
 ************************************************************************/
 int main(){
 
-    bool application_flag = true;
-
+    //bool application_flag = true;
+    int yearInput;
+    int monthInput;
+    char again[10];
     
     // Application loop here
     while (true){
-        int yearInput;
-        int monthInput;
-        printf("Please enter the Desired year:\t\t");
-        scanf("%d", &yearInput);
-        printf("Please enter the desired month:\t\t");
-        scanf("%d", &monthInput);
-
-        int FirstDayOfTheMonth = calculate(monthInput, yearInput);
-        printf("First day of the month is:\t\t%d\n", FirstDayOfTheMonth);
-
-        printCalendar(monthInput, yearInput);
-
+        if(getUserInput(&monthInput, &yearInput)){          // Application runs as normal
+            
+            int firstDayOfTheMonth = calculate(monthInput, yearInput);
+            printf("First day of the month is:\t\t%d\n", firstDayOfTheMonth);
+            printCalendar(firstDayOfTheMonth, monthInput, yearInput);
+        }
+            
+        printf("Try again? (yes or no)\t\t");
+        scanf("%s", again);
+        if(
+            strncmp(again, "no", 2) || 
+            strncmp(again, "No", 2) ||
+            strncmp(again, "n", 1) || 
+            strncmp(again, "N", 1) 
+            )break;
     }
+
+    printf("end\n");
     return 0;
 }
