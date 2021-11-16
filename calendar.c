@@ -142,7 +142,7 @@ void printCalendar(int firstDayOfTheMonth, int month, int year){
     
     //Printing the header
     printf("\n\n\t\t%s\n", monthstr);
-    printf("sun\tmon\ttue\twed\tthu\tfri\tsat\n");
+    printf("SUN\nMON\tTUE\tWED\tTHU\tFRI\tSAT\n");
 
     //Print the first week
     for (int firstEmpty = 0; firstEmpty < firstDayOfTheMonth; firstEmpty++){
@@ -153,14 +153,21 @@ void printCalendar(int firstDayOfTheMonth, int month, int year){
         daycounter++;
         days--;
     }
+    printf("\n");
 
     // Printing the rest of the weeks;
-    for(){
-        for (int weekCounter = 7; weekCounter > 0; weekCounter--)
+    for(days; days > 0; ){
+        for (int weekly = 0; weekly < 7; weekly++){
+            if(days == 0) break;
             printf("%d\t", daycounter);
-            daycounter++;
-            days--;
+        daycounter++;
+        days--;
+        }
+        //printf("%d\n", days);
+        printf("\n");
     }
+    printf("\n");
+
 
 }
 
